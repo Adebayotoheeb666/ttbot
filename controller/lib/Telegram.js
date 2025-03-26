@@ -1,4 +1,3 @@
-const { text } = require('express');
 const { axiosInstance } = require('./axios');
 
 function sendMessage(messageObj, messageText) {
@@ -9,7 +8,13 @@ function sendMessage(messageObj, messageText) {
 }
 
 function handleMessage(messageObj) {
+    if (!messageObj) {
+        console.error('Message object is undefined');
+        return; // Early return if messageObj is undefined
+    }
+    
     const messageText = messageObj.text || '';
+
 
     if (messageText.charAt(0) === '/') {
 

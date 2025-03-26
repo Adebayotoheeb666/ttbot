@@ -4,9 +4,15 @@ async function handler(req, method) {
     const { body } = req;
     if (body) {
         const messageObj = body.message;
-        await handleMessage(messageObj);
+        if (messageObj) {
+            await handleMessage(messageObj);
+        } else {
+            console.error('Message object is undefined');
+            // Optionally, return a response indicating the message is missing
+        }
     }
     return;
 }
+
 
 module.exports = { handler };
