@@ -1,13 +1,15 @@
 const { axiosInstance } = require('./axios');
 
 function sendMessage(messageObj, messageText) {
-    return axiosInstance.get('sendMessage', {
+    return axiosInstance.post('sendMessage', {
+
         chat_id: messageObj.chat_id,
         text: messageText,
     });
 }
 
-function handleMessage(messageObj) {
+async function handleMessage(messageObj) {
+
     if (!messageObj) {
         console.error('Message object is undefined');
         return; // Early return if messageObj is undefined
@@ -33,8 +35,16 @@ function handleMessage(messageObj) {
         }
     } else {
         //we can send the same message back to the user
-        return sendMessage(messageObj, messageText);
+    try {
+        return await sendMessage(messageObj, messageText);
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+
     }
 }
 
 module.exports = { handleMessage };
+
+
+//https://api.telegram.org/bot token / setWebhook?url= method

@@ -7,7 +7,7 @@ app.use(express.json());
 app.post('*', async (req, res) => {
     console.log(req.body); // Updated to log the request body correctly
 
-    res.send('await handler(req)');
+    res.send(await handler(req));
 });
 app.get('*', async (req, res) => {
     res.send(await handler(req));
