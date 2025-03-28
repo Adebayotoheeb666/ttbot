@@ -85,7 +85,46 @@ function extractTweetId(url) {
   }
 }
 
+async function getTweetCommenters(url) {
+  const tweetId = extractTweetId(url);
+  if (!tweetId) {
+    throw new Error('Invalid tweet ID');
+  }
 
+  try {
+    const tweet = await twitterBearer.v2.tweet(tweetId, {
+      expansions: ['author_id'],
+      'tweet.fields': ['public_metrics']
+    });
+
+    // Assuming the tweet object contains a list of commenters
+    const commenters = tweet.includes.users.map(user => user.id);
+    return commenters;
+  } catch (error) {
+    console.error('Error fetching tweet commenters:', error);
+    throw new Error('Failed to fetch tweet commenters');
+  }
+}
+async function getTweetCommenters(url) {
+  const tweetId = extractTweetId(url);
+  if (!tweetId) {
+    throw new Error('Invalid tweet ID');
+  }
+
+  try {
+    const tweet = await twitterBearer.v2.tweet(tweetId, {
+      expansions: ['author_id'],
+      'tweet.fields': ['public_metrics']
+    });
+
+    // Assuming the tweet object contains a list of commenters
+    const commenters = tweet.includes.users.map(user => user.id);
+    return commenters;
+  } catch (error) {
+    console.error('Error fetching tweet commenters:', error);
+    throw new Error('Failed to fetch tweet commenters');
+  }
+}
 
 
 // ========== BOT HANDLERS ==========
