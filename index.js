@@ -25,9 +25,12 @@ const userData = {};
 // ===== Rate Limiter =====
 class RateLimiter {
   constructor(windowMs = 15 * 60 * 1000, maxRequests = 280) {
+    this.lastRequestTime = 0; // Track the last request time
+
     this.windowMs = windowMs;
     this.maxRequests = maxRequests;
-    this.requests = [];
+    this.requests = []; // Track request timestamps
+
   }
 
   async wait() {
@@ -36,7 +39,8 @@ class RateLimiter {
     
     if (this.requests.length >= this.maxRequests) {
       const oldest = this.requests[0];
-      const waitTime = this.windowMs - (now - oldest);
+      const waitTime = Math.min(this.windowMs, this.windowMs * Math.pow(2, this.requests.length - this.maxRequests)); // Exponential backoff
+
       await new Promise(resolve => setTimeout(resolve, waitTime));
       return this.wait();
     }
@@ -110,7 +114,14 @@ function extractTweetId(url) {
 async function safeTwitterCall(fn) {
   try {
     await rateLimiter.wait();
-    const response = await fn();
+    const response = await fn().catch(async err => {
+      if (err.response?.status === 429) {
+        console.error('Rate limit exceeded. Waiting before retrying...');
+        await new Promise(resolve => setTimeout(resolve, this.windowMs)); // Wait before retrying
+      }
+      throw err; // Rethrow the error
+    });
+
     
     if (response?.meta?.result_count === 0 && !response?.data) {
       throw new Error('Empty API response');
@@ -184,10 +195,15 @@ async function getTweetCommenters(tweetUrl) {
 
     return commenters;
   } catch (error) {
-    console.error('Error in getTweetCommenters:', {
+    console.error('Error in getTweetCommenters:', { 
       error: error.message,
       url: tweetUrl,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      requestsMade: this.requests.length, // Log the number of requests made
+
+      error: error.message,
+      url: tweetUrl,
+      timestamp: new Date().toISOString(),
     });
     throw new Error(`Failed to fetch commenters: ${error.message}`);
   }
