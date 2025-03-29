@@ -15,5 +15,6 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "twitter-api-v2": "^1.22.0"
-  }
+  },
+  "type": "module"
 }
