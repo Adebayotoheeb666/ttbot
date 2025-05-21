@@ -6,7 +6,7 @@
 </h3>
 
    
-## 📋 <a> name="table">Table of Contents</a>
+## 📋 <a name="table">Table of Contents</a>
 
 1. 🤖 [Introduction](#introduction)
 2. ⚙️ [Tech Stack](#tech-stack)
@@ -24,7 +24,7 @@ This Telegram bot allows users to input a tweet link, and in response, the bot r
 
 
 
-## <a name="tech-stack">⚙️ Tech Stack/a>
+## <a name="tech-stack">⚙️ Tech Stack</a>
 
 Node.js / Python (choose based on your implementation)
 
@@ -117,6 +117,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser to view the 
 Open Telegram, search for your bot, and start chatting!
 
 **🔗 Links**
+<br/>
 Telegram Bot API
 
 Twitter Developer Docs
